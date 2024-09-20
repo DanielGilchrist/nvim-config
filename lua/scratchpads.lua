@@ -1,6 +1,20 @@
 local noice = require("noice")
 local scratchpads_dir = vim.fn.expand("~/.local/share/scratchpads/")
 
+local function telescope_search(title, attach_mappings_func)
+  local args = {
+    prompt_title = title,
+    cwd = scratchpads_dir,
+    hidden = false,
+  }
+
+  if attach_mappings_func then
+    args["attach_mappings"] = attach_mappings_func
+  end
+
+  require("telescope.builtin").find_files(args)
+end
+
 local function build_new_filename(count, extension)
   return scratchpads_dir .. "scratch" .. count .. extension
 end
@@ -58,11 +72,7 @@ local function open_scratchpad()
     return
   end
 
-  require("telescope.builtin").find_files({
-    prompt_title = "Search Scratchpads",
-    cwd = vim.fn.expand("~/.local/share/scratchpads/"),
-    hidden = false,
-  })
+  telescope_search("Search Scratchpads")
 end
 
 local function valid_scratch_file(filename)
@@ -92,6 +102,33 @@ local function rename_scratchpad()
   end)
 end
 
+local function remove_scratchpad()
+  local actions_state = require("telescope.actions.state")
+  local actions = require("telescope.actions")
+
+  local delete_scratchpad = function(prompt_bufnr)
+    local selected_entry = actions_state.get_selected_entry()
+    actions.close(prompt_bufnr)
+
+    local input_prompt = "Are you sure you want to remove " .. selected_entry.value .. "?"
+    vim.ui.input({ prompt = input_prompt }, function(input)
+      if input == "y" then
+        os.remove(scratchpads_dir .. selected_entry.value)
+        noice.notify("Removed " .. selected_entry.value, "success")
+      else
+        noice.notify("Action to remove " .. selected_entry.value .. " has been cancelled", "warn")
+      end
+    end)
+  end
+
+  telescope_search("Delete Scratchpad", function(_, map)
+    map("i", "<CR>", delete_scratchpad)
+
+    return true
+  end)
+end
+
 vim.api.nvim_create_user_command("ScratchNew", new_scratchpad, {})
 vim.api.nvim_create_user_command("ScratchOpen", open_scratchpad, {})
 vim.api.nvim_create_user_command("ScratchRename", rename_scratchpad, {})
+vim.api.nvim_create_user_command("ScratchRemove", remove_scratchpad, {})
