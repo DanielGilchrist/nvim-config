@@ -1,16 +1,21 @@
 local scratchpads_dir = vim.fn.expand("~/.local/share/scratchpads/")
 
+local function build_new_filename(count, extension)
+  return scratchpads_dir .. "scratch" .. count .. extension
+end
+
 local function create_scratchpad(extension)
   if vim.fn.isdirectory(scratchpads_dir) == 0 then
     vim.fn.mkdir(scratchpads_dir, "p")
   end
 
   local count = 1
-  while vim.fn.filereadable(scratchpads_dir .. "scratchpad" .. count .. extension) == 1 do
-    count = count + 1
-  end
+  local filename = build_new_filename(count, extension)
 
-  local filename = scratchpads_dir .. "scratch" .. count .. extension
+  while vim.fn.filereadable(filename) == 1 do
+    count = count + 1
+    filename = build_new_filename(count, extension)
+  end
 
   vim.cmd("edit " .. filename)
 end
@@ -20,6 +25,7 @@ local function new_scratchpad()
     { lang = "Ruby", ext = ".rb" },
     { lang = "Crystal", ext = ".cr" },
     { lang = "JavaScript", ext = ".js" },
+    { lang = "SQL", ext = ".sql" },
   }, {
     prompt = "Select a language",
     format_item = function(item)
