@@ -27,6 +27,7 @@ local function new_scratchpad()
     { lang = "Crystal", ext = ".cr" },
     { lang = "JavaScript", ext = ".js" },
     { lang = "SQL", ext = ".sql" },
+    { lang = "Text", ext = ".txt" },
   }, {
     prompt = "Select a language",
     format_item = function(item)
