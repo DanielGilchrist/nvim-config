@@ -1,3 +1,4 @@
+local noice = require("noice")
 local scratchpads_dir = vim.fn.expand("~/.local/share/scratchpads/")
 
 local function build_new_filename(count, extension)
@@ -39,6 +40,23 @@ local function new_scratchpad()
 end
 
 local function open_scratchpad()
+  local no_scratchpads = false
+
+  if vim.fn.isdirectory(scratchpads_dir) == 0 then
+    no_scratchpads = true
+  else
+    local files = vim.fn.globpath(scratchpads_dir, "*")
+
+    if #files == 0 then
+      no_scratchpads = true
+    end
+  end
+
+  if no_scratchpads then
+    noice.notify("No scratchpads have been created. Create one with `:ScratchNew`.", "warn")
+    return
+  end
+
   require("telescope.builtin").find_files({
     prompt_title = "Search Scratchpads",
     cwd = vim.fn.expand("~/.local/share/scratchpads/"),
@@ -51,7 +69,6 @@ local function valid_scratch_file(filename)
 end
 
 local function rename_scratchpad()
-  local noice = require("noice")
   local old_filename = vim.api.nvim_buf_get_name(0)
 
   if not valid_scratch_file(old_filename) then
