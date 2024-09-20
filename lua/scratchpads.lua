@@ -19,8 +19,12 @@ local function build_new_filename(count, extension)
   return scratchpads_dir .. "scratch" .. count .. extension
 end
 
+local function scratchpads_dir_not_created()
+  return vim.fn.isdirectory(scratchpads_dir) == 0
+end
+
 local function create_scratchpad(extension)
-  if vim.fn.isdirectory(scratchpads_dir) == 0 then
+  if scratchpads_dir_not_created() then
     vim.fn.mkdir(scratchpads_dir, "p")
   end
 
@@ -55,24 +59,11 @@ local function new_scratchpad()
 end
 
 local function open_scratchpad()
-  local no_scratchpads = false
-
-  if vim.fn.isdirectory(scratchpads_dir) == 0 then
-    no_scratchpads = true
-  else
-    local files = vim.fn.globpath(scratchpads_dir, "*")
-
-    if #files == 0 then
-      no_scratchpads = true
-    end
-  end
-
-  if no_scratchpads then
+  if scratchpads_dir_not_created() or #vim.fn.globpath(scratchpads_dir, "*") == 0 then
     noice.notify("No scratchpads have been created. Create one with `:ScratchNew`.", "warn")
-    return
+  else
+    telescope_search("Search Scratchpads")
   end
-
-  telescope_search("Search Scratchpads")
 end
 
 local function valid_scratch_file(filename)
