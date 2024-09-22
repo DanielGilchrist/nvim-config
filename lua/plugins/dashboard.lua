@@ -1,3 +1,5 @@
+local header_logo = "genie_vim"
+
 local file = require("../utils/file")
 local path = require("../utils/path")
 
@@ -23,7 +25,7 @@ return {
   "nvimdev/dashboard-nvim",
   event = "VimEnter",
   opts = function(_, dashboard)
-    local logo = load_and_format_logo("bing_bong")
+    local logo = load_and_format_logo(header_logo)
     dashboard.config.header = vim.split(logo, "\n")
   end,
 }
