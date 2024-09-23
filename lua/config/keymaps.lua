@@ -3,6 +3,8 @@
 -- Add any additional keymaps here
 
 local map = vim.keymap.set
+
+local gitlinker = require("gitlinker")
 local telescope = require("telescope.builtin")
 
 map("n", "<C-p>", telescope.find_files, { desc = "File Picker" })
@@ -16,4 +18,14 @@ map("n", "<leader>fh", telescope.help_tags, { desc = "Search help" })
 map("n", "<leader>uC", function()
   vim.cmd("doautocmd User LazyColorscheme")
   telescope.colorscheme({ enable_preview = true })
-end, {})
+end, { desc = "View installed colour themes" })
+
+map("n", "<leader>gy", function()
+  local url = gitlinker.get_buf_range_url("n")
+  vim.fn.setreg("+", url)
+end, { desc = "Copy remote link to clipboard", noremap = true })
+
+map("v", "<leader>gy", function()
+  local url = gitlinker.get_buf_range_url("v")
+  vim.fn.setreg("+", url)
+end, { desc = "Copy remote link to clipboard", noremap = true })
