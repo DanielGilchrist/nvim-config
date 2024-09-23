@@ -29,3 +29,7 @@ map("v", "<leader>gy", function()
   local url = gitlinker.get_buf_range_url("v")
   vim.fn.setreg("+", url)
 end, { desc = "Copy remote link to clipboard", noremap = true })
+
+map("n", "<leader>fd", telescope.diagnostics, { desc = "Find diagnostics" })
+map("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to prev diagnostic" })
+map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
