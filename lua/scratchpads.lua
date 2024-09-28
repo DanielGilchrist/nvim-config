@@ -9,7 +9,7 @@ local function telescope_search(title, attach_mappings_func)
   }
 
   if attach_mappings_func then
-    args["attach_mappings"] = attach_mappings_func
+    args.attach_mappings = attach_mappings_func
   end
 
   require("telescope.builtin").find_files(args)
