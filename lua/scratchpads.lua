@@ -46,6 +46,8 @@ local function new_scratchpad()
     { lang = "JavaScript", ext = ".js" },
     { lang = "SQL", ext = ".sql" },
     { lang = "Text", ext = ".txt" },
+    { lang = "Bash", ext = ".sh" },
+    { lang = "Fish", ext = ".fish" },
   }, {
     prompt = "Select a language",
     format_item = function(item)
