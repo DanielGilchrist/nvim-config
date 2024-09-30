@@ -1,9 +1,11 @@
+local path = require("../utils/path")
+
 local function load(name)
   require("custom." .. name)
 end
 
 return {
-  dir = vim.fn.stdpath("config") .. "/lua/custom/",
+  dir = path.absolute_path("/custom"),
   name = "Custom Plugins",
   config = function()
     load("scratchpads")
