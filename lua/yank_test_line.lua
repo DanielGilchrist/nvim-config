@@ -1,15 +1,28 @@
 local noice = require("noice")
 
+local function double_quote(text)
+  return '"' .. text .. '"'
+end
+
+local function maybe_test_name()
+  local file_path = vim.fn.expand("%:p")
+  if file_path:find("^test") ~= nil then
+    return
+  end
+
+  return file_path:match("test/(.*)_test%.rb")
+end
+
 local function yank_test_line()
-  local line = vim.fn.search("^# test", "W")
+  local test_name = maybe_test_name()
 
-  if line > 0 then
-    local test_line = vim.fn.getline(line):gsub("^#%s*", "")
+  if test_name then
+    local test_command = "test " .. double_quote(test_name)
 
-    vim.fn.setreg("+", test_line)
-    noice.notify(test_line, "success")
+    vim.fn.setreg("+", test_command)
+    noice.notify(test_command, "success")
   else
-    noice.notify("Unable to find test comment in file", "error")
+    noice.notify("Not a test file", "warn")
   end
 end
 
