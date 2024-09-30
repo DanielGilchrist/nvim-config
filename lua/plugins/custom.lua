@@ -1,7 +1,8 @@
 return {
   dir = vim.fn.stdpath("config") .. "/lua",
-  name = "scratchpads",
+  name = "Custom Plugins",
   config = function()
     require("scratchpads")
-  end
+    require("yank_test_line")
+  end,
 }
