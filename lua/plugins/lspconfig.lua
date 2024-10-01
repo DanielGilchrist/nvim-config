@@ -14,4 +14,9 @@ return {
       end,
     },
   },
+  config = function()
+    local lspconfig = require("lspconfig")
+
+    lspconfig.flow.setup({})
+  end,
 }
