@@ -4,4 +4,5 @@ end
 
 return {
   disable_plugin("mrcjkb/rustaceanvim"),
+  disable_plugin("mfussenegger/nvim-lint"),
 }
