@@ -6,6 +6,9 @@ end
 return {
   "neovim/nvim-lspconfig",
   opts = {
+    inlay_hints = {
+      enabled = true,
+    },
     setup = {
       -- TODO: Can be re-enabled if the following issue is ever resolved: https://github.com/elbywan/crystalline/issues/41
       crystalline = function(_, opts)
