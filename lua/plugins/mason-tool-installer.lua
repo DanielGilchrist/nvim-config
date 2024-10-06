@@ -10,7 +10,6 @@ return {
       "lua-language-server",
       "rubocop",
       "ruby-lsp",
-      "rust-analyzer",
       "shfmt",
       "sorbet",
       "stylua",

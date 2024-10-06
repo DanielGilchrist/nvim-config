@@ -3,7 +3,6 @@ local function disable_plugin(source)
 end
 
 return {
-  disable_plugin("mrcjkb/rustaceanvim"),
   disable_plugin("mfussenegger/nvim-lint"),
   disable_plugin("stevearc/conform.nvim"),
   disable_plugin("rafamadriz/friendly-snippets"),
