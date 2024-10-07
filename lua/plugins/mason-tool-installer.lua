@@ -8,7 +8,6 @@ return {
       "erb-lint",
       "gopls",
       "lua-language-server",
-      "rubocop",
       "ruby-lsp",
       "shfmt",
       "sorbet",
