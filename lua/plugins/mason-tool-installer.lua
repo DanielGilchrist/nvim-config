@@ -9,7 +9,6 @@ return {
       "gopls",
       "lua-language-server",
       "shfmt",
-      "sorbet",
       "stylua",
       "taplo",
       "terraform-ls",

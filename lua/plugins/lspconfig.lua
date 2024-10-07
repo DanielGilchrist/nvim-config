@@ -24,7 +24,10 @@ return {
         cmd = { "bundle", "exec", "rubocop", "--lsp" },
         root_dir = lspconfig.util.root_pattern("Gemfile", ".git", ".")
       },
-      ruby_lsp = {}
+      ruby_lsp = {},
+      sorbet = {
+        cmd = { "bundle", "exec", "srb", "tc", "--lsp" }
+      }
     }
   },
 }
