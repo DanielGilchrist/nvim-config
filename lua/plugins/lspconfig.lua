@@ -1,3 +1,5 @@
+local lspconfig = require("lspconfig")
+
 local function disable_format(client)
   client.server_capabilities.documentFormattingProvider = false
   client.server_capabilities.documentRangeFormattingProvider = false
@@ -17,5 +19,12 @@ return {
         end
       end,
     },
+    servers = {
+      rubocop = {
+        cmd = { "bundle", "exec", "rubocop", "--lsp" },
+        root_dir = lspconfig.util.root_pattern("Gemfile", ".git", ".")
+      },
+      ruby_lsp = {}
+    }
   },
 }
