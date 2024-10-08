@@ -27,6 +27,15 @@ return {
       ruby_lsp = {},
       sorbet = {
         cmd = { "bundle", "exec", "srb", "tc", "--lsp" }
+      },
+      yamlls = {
+        settings = {
+          yaml = {
+            format = {
+              enable = false,
+            }
+          }
+        }
       }
     }
   },
