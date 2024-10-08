@@ -4,8 +4,6 @@ return {
     ensure_installed = {
       "codelldb",
       "crystalline",
-      "erb-formatter",
-      "erb-lint",
       "gopls",
       "lua-language-server",
       "shfmt",
@@ -13,7 +11,6 @@ return {
       "taplo",
       "terraform-ls",
       "tflint",
-      "yaml-language-server",
     },
   },
 }
