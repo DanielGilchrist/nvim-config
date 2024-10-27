@@ -56,6 +56,7 @@ return {
       end,
     },
     servers = {
+      flow = {},
       rubocop = {
         mason = false,
         cmd = gemfile_command_or_fallback("rubocop", { "rubocop", "--lsp" }, ""),
