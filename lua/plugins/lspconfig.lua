@@ -37,6 +37,10 @@ local function gemfile_command_or_fallback(gem_name, command, fallback)
   return fallback
 end
 
+local function asdf_shim(command)
+  vim.fn.expand("~/.asdf/shims/" .. command)
+end
+
 return {
   "neovim/nvim-lspconfig",
   opts = {
@@ -53,13 +57,16 @@ return {
     },
     servers = {
       rubocop = {
+        mason = false,
         cmd = gemfile_command_or_fallback("rubocop", { "rubocop", "--lsp" }, ""),
         root_dir = lspconfig.util.root_pattern("Gemfile", ".git", ".")
       },
       ruby_lsp = {
-        cmd = gemfile_command_or_fallback("ruby-lsp")
+        mason = false,
+        cmd = gemfile_command_or_fallback("ruby-lsp", nil, asdf_shim("ruby-lsp"))
       },
       sorbet = {
+        mason = false,
         cmd = gemfile_command_or_fallback("sorbet", { "srb", "tc", "--lsp" }, "")
       },
       yamlls = {
