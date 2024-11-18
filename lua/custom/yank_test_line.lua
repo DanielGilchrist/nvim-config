@@ -65,6 +65,8 @@ local function yank_test_line_with_number()
     if line_number then
       local test_command = build_test_command(test_name, line_number)
       save_to_clipboard_and_notify(test_command)
+    else
+      noice.notify("Unable to find test line number. Move the cursor inside a test and try again.", "warn")
     end
   else
     not_a_test_file()
