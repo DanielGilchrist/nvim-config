@@ -2,14 +2,16 @@
 -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 -- Add any additional autocmds here
 
+local create_autocmd = vim.api.nvim_create_autocmd
+
 -- nuke trailing whitespace on save
-vim.api.nvim_create_autocmd("BufWritePre", {
+create_autocmd("BufWritePre", {
   pattern = "*",
   command = [[%s/\s\+$//e]],
 })
 
 -- show dashboard if no files are open
-vim.api.nvim_create_autocmd("BufDelete", {
+create_autocmd("BufDelete", {
   group = vim.api.nvim_create_augroup("bufdelpost_autocmd", {}),
   desc = "BufDeletePost User autocmd",
   callback = function()
@@ -21,7 +23,7 @@ vim.api.nvim_create_autocmd("BufDelete", {
   end,
 })
 
-vim.api.nvim_create_autocmd("User", {
+create_autocmd("User", {
   pattern = "BufDeletePost",
   group = vim.api.nvim_create_augroup("dashboard_delete_buffers", {}),
   desc = "Open Dashboard when no available buffers",
@@ -49,4 +51,17 @@ vim.api.nvim_create_autocmd("User", {
       vim.cmd("Dashboard")
     end
   end,
+})
+
+-- Show absolute numbers in insert mode
+create_autocmd("InsertEnter", {
+  callback = function()
+    vim.opt.relativenumber = false
+  end
+})
+
+create_autocmd("InsertLeave", {
+  callback = function()
+    vim.opt.relativenumber = true
+  end
 })
