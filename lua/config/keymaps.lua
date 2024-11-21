@@ -6,9 +6,10 @@ local map = vim.keymap.set
 
 local gitlinker = require("gitlinker")
 local telescope = require("telescope.builtin")
+local telescope_ext = require("telescope").extensions
 
 map("n", "<C-p>", telescope.find_files, { desc = "File Picker" })
-map("n", "<leader>fg", telescope.live_grep, { desc = "Search current working directory" })
+map("n", "<leader>fg", telescope_ext.live_grep_args.live_grep_args, { desc = "Search current working directory" })
 map("n", "<leader>fC", function()
   telescope.live_grep({ search_dirs = { vim.fn.expand("%:p") } })
 end, { desc = "Search current file" })
