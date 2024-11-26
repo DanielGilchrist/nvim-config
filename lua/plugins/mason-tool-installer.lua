@@ -1,5 +1,7 @@
 return {
   "WhoIsSethDaniel/mason-tool-installer",
+  lazy = true,
+  cmd = { "MasonToolsInstall", "MasonToolsUpdate", "MasonToolsClean" },
   opts = {
     ensure_installed = {
       "codelldb",

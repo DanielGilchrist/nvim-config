@@ -5,6 +5,8 @@ local function load(name)
 end
 
 return {
+  lazy = true,
+  event = { "CmdlineEnter" },
   dir = path.absolute_path("/custom"),
   name = "Custom Plugins",
   config = function()
