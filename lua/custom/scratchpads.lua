@@ -1,4 +1,4 @@
-local noice = require("noice")
+local notify = require("../utils/notify")
 local scratchpads_dir = vim.fn.expand("~/.local/share/scratchpads/")
 
 local function telescope_search(title, attach_mappings_func)
@@ -41,13 +41,13 @@ end
 
 local function new_scratchpad()
   vim.ui.select({
-    { lang = "Ruby", ext = ".rb" },
-    { lang = "Crystal", ext = ".cr" },
+    { lang = "Ruby",       ext = ".rb" },
+    { lang = "Crystal",    ext = ".cr" },
     { lang = "JavaScript", ext = ".js" },
-    { lang = "SQL", ext = ".sql" },
-    { lang = "Text", ext = ".txt" },
-    { lang = "Bash", ext = ".sh" },
-    { lang = "Fish", ext = ".fish" },
+    { lang = "SQL",        ext = ".sql" },
+    { lang = "Text",       ext = ".txt" },
+    { lang = "Bash",       ext = ".sh" },
+    { lang = "Fish",       ext = ".fish" },
   }, {
     prompt = "Select a language",
     format_item = function(item)
@@ -62,7 +62,7 @@ end
 
 local function open_scratchpad()
   if scratchpads_dir_not_created() or #vim.fn.globpath(scratchpads_dir, "*") == 0 then
-    noice.notify("No scratchpads have been created. Create one with `:ScratchNew`.", "warn")
+    notify.warn("No scratchpads have been created. Create one with `:ScratchNew`.")
   else
     telescope_search("Search Scratchpads")
   end
@@ -76,7 +76,7 @@ local function rename_scratchpad()
   local old_filename = vim.api.nvim_buf_get_name(0)
 
   if not valid_scratch_file(old_filename) then
-    noice.notify(old_filename .. " is not a scratch file!", "error")
+    notify.error(old_filename .. " is not a scratch file!")
     return
   end
 
@@ -90,7 +90,7 @@ local function rename_scratchpad()
       vim.fn.rename(old_filename, new_filename)
       vim.cmd("bd!")
       vim.cmd("edit " .. new_filename)
-      noice.notify("Scratchpad renamed from " .. old_filename .. " to " .. new_filename, "success")
+      notify.info("Scratchpad renamed from " .. old_filename .. " to " .. new_filename)
     end
   end)
 end
@@ -107,9 +107,9 @@ local function remove_scratchpad()
     vim.ui.input({ prompt = input_prompt }, function(input)
       if input == "y" then
         os.remove(scratchpads_dir .. selected_entry.value)
-        noice.notify("Removed " .. selected_entry.value, "success")
+        notify.info("Removed " .. selected_entry.value)
       else
-        noice.notify("Action to remove " .. selected_entry.value .. " has been cancelled", "warn")
+        notify.warn("Action to remove " .. selected_entry.value .. " has been cancelled")
       end
     end)
   end

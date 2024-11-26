@@ -1,4 +1,4 @@
-local noice = require("noice")
+local notify = require("../utils/notify")
 
 local function double_quote(text)
   return '"' .. text .. '"'
@@ -25,11 +25,11 @@ end
 
 local function save_to_clipboard_and_notify(test_command)
   vim.fn.setreg("+", test_command)
-  noice.notify(test_command, "success")
+  notify.info(test_command)
 end
 
 local function not_a_test_file()
-  noice.notify("Not a test file!", "warn")
+  notify.warn("Not a test file!")
 end
 
 local function find_test_line_number()
@@ -66,7 +66,7 @@ local function yank_test_line_with_number()
       local test_command = build_test_command(test_name, line_number)
       save_to_clipboard_and_notify(test_command)
     else
-      noice.notify("Unable to find test line number. Move the cursor inside a test and try again.", "warn")
+      notify.warn("Unable to find test line number. Move the cursor inside a test and try again.")
     end
   else
     not_a_test_file()
