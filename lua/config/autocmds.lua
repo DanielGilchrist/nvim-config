@@ -48,7 +48,7 @@ create_autocmd("User", {
     end
 
     if no_file_buffers_open() then
-      vim.cmd("Dashboard")
+      Snacks.dashboard()
     end
   end,
 })
