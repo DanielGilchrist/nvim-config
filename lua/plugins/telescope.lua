@@ -1,5 +1,8 @@
 return {
   "nvim-telescope/telescope.nvim",
+  keys = {
+    { "<leader>fg", false }
+  },
   dependencies = {
     {
       "nvim-telescope/telescope-live-grep-args.nvim",
