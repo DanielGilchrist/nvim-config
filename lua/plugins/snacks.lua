@@ -1,4 +1,4 @@
-local header = "genievim"
+local header = "neovim"
 
 local file = require("../utils/file")
 local path = require("../utils/path")
