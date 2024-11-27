@@ -58,6 +58,11 @@ return {
     }
 
     opts.servers = {
+      crystalline = {
+        mason = false,
+        cmd = { "/usr/local/bin/crystalline" },
+        root_dir = lspconfig.util.root_pattern("shard.yml", ".git", ".")
+      },
       flow = {},
       rubocop = {
         mason = false,
