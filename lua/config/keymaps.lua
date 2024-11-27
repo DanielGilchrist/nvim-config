@@ -13,7 +13,7 @@ map("n", "<leader>fg", function()
   require("telescope").extensions.live_grep_args.live_grep_args()
 end, { desc = "Search current working directory" })
 
-map("n", "<leader>fC", function()
+map("n", "<leader>fc", function()
   require("telescope.builtin").live_grep({ search_dirs = { vim.fn.expand("%:p") } })
 end, { desc = "Search current file" })
 
