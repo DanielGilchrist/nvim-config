@@ -1,5 +1,3 @@
-local lspconfig = require("lspconfig")
-
 local function disable_format(client)
   client.server_capabilities.documentFormattingProvider = false
   client.server_capabilities.documentRangeFormattingProvider = false
@@ -43,19 +41,23 @@ end
 
 return {
   "neovim/nvim-lspconfig",
-  opts = {
-    inlay_hints = {
+  opts = function(_, opts)
+    local lspconfig = require("lspconfig")
+
+    opts.inlay_hints = {
       enabled = false,
-    },
-    setup = {
+    }
+
+    opts.setup = {
       -- TODO: Can be re-enabled if the following issue is ever resolved: https://github.com/elbywan/crystalline/issues/41
-      crystalline = function(_, opts)
-        opts.on_attach = function(client)
+      crystalline = function(_, cr_opts)
+        cr_opts.on_attach = function(client)
           disable_format(client)
         end
       end,
-    },
-    servers = {
+    }
+
+    opts.servers = {
       flow = {},
       rubocop = {
         mason = false,
@@ -80,5 +82,5 @@ return {
         }
       }
     }
-  },
+  end,
 }
