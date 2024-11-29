@@ -1,7 +1,12 @@
+local function leader(keys)
+  return "<leader>" .. keys
+end
+
 return {
   "nvim-telescope/telescope.nvim",
   keys = {
-    { "<leader>fg", false }
+    { leader("fg"), false },
+    { leader("fc"), false }
   },
   dependencies = {
     {
