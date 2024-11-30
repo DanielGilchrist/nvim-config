@@ -1,15 +1,21 @@
 local notify = require("../utils/notify")
 local scratchpads_dir = vim.fn.expand("~/.local/share/scratchpads/")
 
-local function telescope_search(title, attach_mappings_func)
+local function telescope_search(title, opts)
+  opts = opts == nil and {} or opts
+
   local args = {
     prompt_title = title,
     cwd = scratchpads_dir,
     hidden = false,
   }
 
-  if attach_mappings_func then
-    args.attach_mappings = attach_mappings_func
+  if opts.attach_mappings then
+    args.attach_mappings = opts.attach_mappings
+  end
+
+  if opts.multi_select then
+    args.multi_icon = "▸"
   end
 
   require("telescope.builtin").find_files(args)
@@ -96,29 +102,51 @@ local function rename_scratchpad()
 end
 
 local function remove_scratchpad()
-  local actions_state = require("telescope.actions.state")
   local actions = require("telescope.actions")
+  local actions_state = require("telescope.actions.state")
 
-  local delete_scratchpad = function(prompt_bufnr)
-    local selected_entry = actions_state.get_selected_entry()
+  local delete_scratchpads = function(prompt_bufnr)
+    local picker = actions_state.get_current_picker(prompt_bufnr)
+    local selected_entries = picker:get_multi_selection()
     actions.close(prompt_bufnr)
 
-    local input_prompt = "Are you sure you want to remove " .. selected_entry.value .. "?"
+    if vim.tbl_isempty(selected_entries) then
+      notify.warn("No files scratchpads selected for removal! Select scratchpads using <Tab>.")
+      return
+    end
+
+    local files_to_delete = {}
+    for _, entry in ipairs(selected_entries) do
+      table.insert(files_to_delete, entry.value)
+    end
+
+    local file_list = table.concat(files_to_delete, "\n")
+    local input_prompt = "Are you sure you want to remove these scratchpads? (y/n)\n\n" .. file_list
+
     vim.ui.input({ prompt = input_prompt }, function(input)
       if input == "y" then
-        os.remove(scratchpads_dir .. selected_entry.value)
-        notify.info("Removed " .. selected_entry.value)
+        for _, file in ipairs(files_to_delete) do
+          os.remove(scratchpads_dir .. file)
+        end
+
+        notify.info("Removed scratchpads:\n\n" .. file_list)
       else
-        notify.warn("Action to remove " .. selected_entry.value .. " has been cancelled")
+        notify.warn("Action to remove scratchpads cancelled.")
       end
     end)
   end
 
-  telescope_search("Delete Scratchpad", function(_, map)
-    map("i", "<CR>", delete_scratchpad)
+  telescope_search("Delete Scratchpad", {
+    attach_mappings = function(_, map)
+      map("i", "<CR>", delete_scratchpads)        -- Confirm deletion with <Enter>
+      map("i", "<Tab>", actions.toggle_selection) -- Toggle selection with <Tab>
+      map("n", "<CR>", delete_scratchpads)
+      map("n", "<Tab>", actions.toggle_selection)
 
-    return true
-  end)
+      return true
+    end,
+    multi_select = true,
+  })
 end
 
 vim.api.nvim_create_user_command("ScratchNew", new_scratchpad, {})
