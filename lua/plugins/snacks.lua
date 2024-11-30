@@ -31,7 +31,13 @@ return {
       enabled = true,
       preset = {
         header = load_header(header)
-      }
+      },
+      sections = {
+        { section = "header" },
+        { section = "keys", indent = 0, padding = 1 },
+        { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+        { section = "startup" },
+      },
     },
     notifier = {
       date_format = "%I:%M%p",
