@@ -34,8 +34,15 @@ return {
       },
       sections = {
         { section = "header" },
-        { section = "keys", padding = 1 },
-        { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+        { section = "keys",  padding = 1 },
+        {
+          icon = " ",
+          title = "Projects",
+          section = "projects",
+          indent = 2,
+          padding = 1,
+          limit = 10,
+        },
         {
           icon = "⏲",
           title = "Time Worked",
