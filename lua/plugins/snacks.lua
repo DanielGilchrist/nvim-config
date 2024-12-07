@@ -24,6 +24,12 @@ local function load_header(header_name)
   return file.read(logo_path(header_name .. ".txt")) or default_logo()
 end
 
+local function tanda_cli_cmd()
+  local command = "tanda_cli time_worked week 2>/dev/null"
+  local zsh_command = "zsh -ic '" .. command .. "'" -- zsh is a pain in the ass
+  return command .. " || " .. zsh_command .. " || " .. "echo \"tanda_cli isn't setup!\""
+end
+
 return {
   "folke/snacks.nvim",
   opts = { -- https://github.com/folke/snacks.nvim/tree/main/docs
@@ -47,7 +53,7 @@ return {
           icon = "⏲",
           title = "Time Worked",
           section = "terminal",
-          cmd = "tanda_cli time_worked week",
+          cmd = tanda_cli_cmd(),
           padding = 1,
           random = os.time(),
         },
