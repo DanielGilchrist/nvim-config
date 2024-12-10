@@ -85,6 +85,9 @@ return {
             }
           }
         }
+      },
+      zls = {
+        mason = false,
       }
     }
   end,
