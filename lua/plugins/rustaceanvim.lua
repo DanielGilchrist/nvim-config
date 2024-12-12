@@ -1,6 +1,6 @@
 return {
   "mrcjkb/rustaceanvim",
-  lazy = false,
+  lazy = true,
   version = "^5",
   opts = {
     default_settings = {
