@@ -1,5 +1,6 @@
 local header = "neovim"
 
+local cmd = require("../utils/cmd")
 local file = require("../utils/file")
 local path = require("../utils/path")
 
@@ -22,12 +23,6 @@ end
 
 local function load_header(header_name)
   return file.read(logo_path(header_name .. ".txt")) or default_logo()
-end
-
-local function tanda_cli_cmd()
-  local command = "tanda_cli time_worked week 2>/dev/null"
-  local zsh_command = "zsh -ic '" .. command .. "'" -- zsh is a pain in the ass
-  return command .. " || " .. zsh_command .. " || " .. "echo \"tanda_cli isn't setup!\""
 end
 
 return {
@@ -53,7 +48,7 @@ return {
           icon = "⏲",
           title = "Time Worked",
           section = "terminal",
-          cmd = tanda_cli_cmd(),
+          cmd = cmd.time_worked_cmd(),
           padding = 1,
           random = os.time(),
         },
