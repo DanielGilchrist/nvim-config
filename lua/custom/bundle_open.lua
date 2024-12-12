@@ -1,3 +1,5 @@
+local notify = require("../utils/notify")
+
 local function fetch_gem_list(callback)
   local gems = {}
 
@@ -12,6 +14,8 @@ local function fetch_gem_list(callback)
   local function on_exit()
     callback(gems)
   end
+
+  notify.info("Fetching gem list for " .. vim.fn.getcwd() .. "...", { timeout = 1000 })
 
   vim.fn.jobstart({ "bundle", "list", "--name-only" }, {
     stdout_buffered = true,
