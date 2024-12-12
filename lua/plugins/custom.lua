@@ -12,5 +12,6 @@ return {
   config = function()
     load("scratchpads")
     load("yank_test_line")
+    load("bundle_open")
   end,
 }
