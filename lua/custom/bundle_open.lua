@@ -1,7 +1,13 @@
 local notify = require("../utils/notify")
+local notify_gem_list_id = "bundle-open-gem-list-id"
 
 local function fetch_gem_list(callback)
   local gems = {}
+
+  notify.info("Fetching gem list for " .. vim.fn.getcwd() .. "...", {
+    id = notify_gem_list_id,
+    timeout = false,
+  })
 
   local function on_stdout(_, data)
     for _, line in ipairs(data) do
@@ -12,10 +18,9 @@ local function fetch_gem_list(callback)
   end
 
   local function on_exit()
+    notify.hide(notify_gem_list_id)
     callback(gems)
   end
-
-  notify.info("Fetching gem list for " .. vim.fn.getcwd() .. "...", { timeout = 1000 })
 
   vim.fn.jobstart({ "bundle", "list", "--name-only" }, {
     stdout_buffered = true,
@@ -45,6 +50,12 @@ local function open_gem()
         results = gems
       }),
       sorter = require("telescope.config").values.generic_sorter({}),
+      layout_config = {
+        width = function(_, max_columns, _)
+          return math.min(max_columns - 40, 80)
+        end,
+        height = 0.4,
+      },
       attach_mappings = function(prompt_bufnr, _map)
         local actions = require("telescope.actions")
         local state = require("telescope.actions.state")

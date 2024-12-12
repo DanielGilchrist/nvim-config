@@ -15,5 +15,8 @@ return {
   end,
   error = function(msg, opts)
     Snacks.notify.error(msg, merge_defaults("Error", opts))
+  end,
+  hide = function(id)
+    Snacks.notifier.hide(id)
   end
 }
