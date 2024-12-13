@@ -5,10 +5,6 @@
 local map = vim.keymap.set
 
 -- Telescope keymaps
-map("n", "<C-p>", function()
-  require("telescope.builtin").find_files()
-end, { desc = "File Picker" })
-
 map("n", "<leader>fg", function()
   require("telescope").extensions.live_grep_args.live_grep_args()
 end, { desc = "Search current working directory" })
