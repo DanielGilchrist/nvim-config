@@ -6,6 +6,10 @@ return {
   },
   dependencies = {
     {
+      "nvim-telescope/telescope-fzf-native.nvim",
+      build = "make"
+    },
+    {
       "nvim-telescope/telescope-live-grep-args.nvim",
       version = "^1.0.0"
     }
@@ -21,6 +25,7 @@ return {
       }
     })
 
+    telescope.load_extension("fzf")
     telescope.load_extension("live_grep_args")
   end
 }
