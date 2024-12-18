@@ -5,10 +5,13 @@
 local map = vim.keymap.set
 
 -- fzf-lua keymaps
-map("n", "<leader>uC", function()
-  vim.cmd("doautocmd User LazyColorscheme")
-  require("fzf-lua").colorschemes({})
-end, { desc = "View installed colour themes" })
+map("n", "<leader>fc", function()
+  require("fzf-lua").live_grep({
+    cwd = vim.fn.expand("%:p:h"),
+    search = "",
+    file_mask = vim.fn.expand("%:t"),
+  })
+end, { desc = "Search current file" })
 
 -- Gitlinker keymaps
 map("n", "<leader>gy", function()
