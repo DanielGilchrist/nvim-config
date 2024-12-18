@@ -44,3 +44,7 @@ end, { desc = "Find diagnostics" })
 
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to prev diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
+
+map("n", "<leader>cS", function()
+  require("treesj").toggle({ split = { recursive = true } })
+end, { desc = "treesj toggle" })
