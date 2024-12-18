@@ -1,4 +1,4 @@
 return {
   "LazyVim/LazyVim",
-  version = "13.*"
+  version = "14.*"
 }
