@@ -11,7 +11,7 @@ return {
   name = "Custom Plugins",
   config = function()
     load("scratchpads")
-    load("yank_test_line")
-    load("bundle_open")
+    -- load("yank_test_line")
+    -- load("bundle_open")
   end,
 }

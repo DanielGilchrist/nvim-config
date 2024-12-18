@@ -1,24 +1,32 @@
 local notify = require("../utils/notify")
 local scratchpads_dir = vim.fn.expand("~/.local/share/scratchpads/")
+local fzf = require("fzf-lua")
 
-local function telescope_search(title, opts)
-  opts = opts == nil and {} or opts
+local function clean_filename(filename)
+  -- Remove icon prefix (everything up to and including first space)
+  return filename:gsub("^[^ ]* ", "")
+end
 
-  local args = {
-    prompt_title = title,
+local function fzf_search(title, opts)
+  opts = opts or {}
+
+  local base_opts = {
+    prompt = title .. "> ",
     cwd = scratchpads_dir,
-    hidden = false,
+    cmd = "fd -t f",
+    actions = {
+      ["default"] = opts.default_action,
+    }
   }
 
-  if opts.attach_mappings then
-    args.attach_mappings = opts.attach_mappings
-  end
-
   if opts.multi_select then
-    args.multi_icon = "▸"
+    base_opts.fzf_opts = {
+      ["--multi"] = "",
+      ["--marker"] = "▸",
+    }
   end
 
-  require("telescope.builtin").find_files(args)
+  fzf.files(vim.tbl_deep_extend("force", base_opts, opts))
 end
 
 local function build_new_filename(count, extension)
@@ -70,7 +78,14 @@ local function open_scratchpad()
   if scratchpads_dir_not_created() or #vim.fn.globpath(scratchpads_dir, "*") == 0 then
     notify.warn("No scratchpads have been created. Create one with `:ScratchNew`.")
   else
-    telescope_search("Search Scratchpads")
+    fzf_search("Search Scratchpads", {
+      default_action = function(selected)
+        notify.warn(vim.inspect(selected))
+        if selected and selected[1] then
+          vim.cmd("edit " .. scratchpads_dir .. clean_filename(selected[1]))
+        end
+      end
+    })
   end
 end
 
@@ -102,33 +117,35 @@ local function rename_scratchpad()
 end
 
 local function remove_scratchpad()
-  local actions = require("telescope.actions")
-  local actions_state = require("telescope.actions.state")
+  local function delete_scratchpads(selected)
+    notify.error(vim.inspect(selected))
 
-  local delete_scratchpads = function(prompt_bufnr)
-    local picker = actions_state.get_current_picker(prompt_bufnr)
-    local selected_entries = picker:get_multi_selection()
-    actions.close(prompt_bufnr)
-
-    if vim.tbl_isempty(selected_entries) then
-      notify.warn("No files scratchpads selected for removal! Select scratchpads using <Tab>.")
+    if not selected or #selected == 0 then
+      notify.warn("No scratchpads selected for removal!")
       return
     end
 
-    local files_to_delete = {}
-    for _, entry in ipairs(selected_entries) do
-      table.insert(files_to_delete, entry.value)
+    -- Clean up filenames for both display and operations
+    local cleaned_files = {}
+    for i, file in ipairs(selected) do
+      notify.error(vim.inspect(file))
+      cleaned_files[i] = clean_filename(file)
     end
 
-    local file_list = table.concat(files_to_delete, "\n")
+    local file_list = table.concat(cleaned_files, "\n")
     local input_prompt = "Are you sure you want to remove these scratchpads? (y/n)\n\n" .. file_list
 
     vim.ui.input({ prompt = input_prompt }, function(input)
       if input == "y" then
-        for _, file in ipairs(files_to_delete) do
-          os.remove(scratchpads_dir .. file)
+        for _, file in ipairs(cleaned_files) do
+          local full_path = scratchpads_dir .. file
+          local success, err = os.remove(full_path)
+          if not success then
+            notify.error(string.format("Failed to remove %s: %s", file, err))
+          else
+            notify.info(string.format("Removed %s", file))
+          end
         end
-
         notify.info("Removed scratchpads:\n\n" .. file_list)
       else
         notify.warn("Action to remove scratchpads cancelled.")
@@ -136,16 +153,12 @@ local function remove_scratchpad()
     end)
   end
 
-  telescope_search("Delete Scratchpad", {
-    attach_mappings = function(_, map)
-      map("i", "<CR>", delete_scratchpads)        -- Confirm deletion with <Enter>
-      map("i", "<Tab>", actions.toggle_selection) -- Toggle selection with <Tab>
-      map("n", "<CR>", delete_scratchpads)
-      map("n", "<Tab>", actions.toggle_selection)
-
-      return true
-    end,
+  fzf_search("Delete Scratchpad", {
     multi_select = true,
+    default_action = delete_scratchpads,
+    keymap = {
+      ["toggle-select"] = { "<Tab>", "<S-Tab>" },
+    }
   })
 end
 
