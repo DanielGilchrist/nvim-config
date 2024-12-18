@@ -4,6 +4,11 @@
 
 local map = vim.keymap.set
 
+-- fzf-lua keymaps
+map("n", "<leader>uC", function()
+  vim.cmd("doautocmd User LazyColorscheme")
+  require("fzf-lua").colorschemes({})
+end, { desc = "View installed colour themes" })
 
 -- Gitlinker keymaps
 map("n", "<leader>gy", function()
