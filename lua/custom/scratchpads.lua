@@ -1,11 +1,5 @@
 local notify = require("../utils/notify")
 local scratchpads_dir = vim.fn.expand("~/.local/share/scratchpads/")
-local fzf = require("fzf-lua")
-
-local function clean_filename(filename)
-  -- Remove icon prefix (everything up to and including first space)
-  return filename:gsub("^[^ ]* ", "")
-end
 
 local function fzf_search(title, opts)
   opts = opts or {}
@@ -14,6 +8,8 @@ local function fzf_search(title, opts)
     prompt = title .. "> ",
     cwd = scratchpads_dir,
     cmd = "fd -t f",
+    file_icons = false,
+    git_icons = false,
     actions = {
       ["default"] = opts.default_action,
     }
@@ -26,7 +22,7 @@ local function fzf_search(title, opts)
     }
   end
 
-  fzf.files(vim.tbl_deep_extend("force", base_opts, opts))
+  require("fzf-lua").files(vim.tbl_deep_extend("force", base_opts, opts))
 end
 
 local function build_new_filename(count, extension)
@@ -80,9 +76,8 @@ local function open_scratchpad()
   else
     fzf_search("Search Scratchpads", {
       default_action = function(selected)
-        notify.warn(vim.inspect(selected))
         if selected and selected[1] then
-          vim.cmd("edit " .. scratchpads_dir .. clean_filename(selected[1]))
+          vim.cmd("edit " .. scratchpads_dir .. selected[1])
         end
       end
     })
@@ -118,26 +113,22 @@ end
 
 local function remove_scratchpad()
   local function delete_scratchpads(selected)
-    notify.error(vim.inspect(selected))
-
     if not selected or #selected == 0 then
       notify.warn("No scratchpads selected for removal!")
       return
     end
 
-    -- Clean up filenames for both display and operations
-    local cleaned_files = {}
+    local files_to_delete = {}
     for i, file in ipairs(selected) do
-      notify.error(vim.inspect(file))
-      cleaned_files[i] = clean_filename(file)
+      files_to_delete[i] = file
     end
 
-    local file_list = table.concat(cleaned_files, "\n")
+    local file_list = table.concat(files_to_delete, "\n")
     local input_prompt = "Are you sure you want to remove these scratchpads? (y/n)\n\n" .. file_list
 
     vim.ui.input({ prompt = input_prompt }, function(input)
       if input == "y" then
-        for _, file in ipairs(cleaned_files) do
+        for _, file in ipairs(files_to_delete) do
           local full_path = scratchpads_dir .. file
           local success, err = os.remove(full_path)
           if not success then
