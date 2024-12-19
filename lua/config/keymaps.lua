@@ -4,11 +4,6 @@
 
 local map = vim.keymap.set
 
--- fzf-lua keymaps
-map("n", "<leader>fC", function()
-  require("fzf-lua").lgrep_curbuf()
-end, { desc = "Search current file" })
-
 -- Gitlinker keymaps
 map("n", "<leader>gy", function()
   local url = require("gitlinker").get_buf_range_url("n")
