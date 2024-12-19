@@ -5,12 +5,8 @@
 local map = vim.keymap.set
 
 -- fzf-lua keymaps
-map("n", "<leader>fc", function()
-  require("fzf-lua").live_grep({
-    cwd = vim.fn.expand("%:p:h"),
-    search = "",
-    file_mask = vim.fn.expand("%:t"),
-  })
+map("n", "<leader>fC", function()
+  require("fzf-lua").lgrep_curbuf()
 end, { desc = "Search current file" })
 
 -- Gitlinker keymaps
