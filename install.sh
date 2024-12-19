@@ -18,6 +18,7 @@ install() {
 
 install fd
 install ripgrep rg
+install fzf
 install lazygit
 install crystalline
 

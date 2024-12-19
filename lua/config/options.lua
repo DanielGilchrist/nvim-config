@@ -4,8 +4,6 @@
 
 -- vim.lsp.set_log_level("debug")
 
-vim.g.lazyvim_picker = "telescope"
-
 vim.g.lazyvim_ruby_lsp = "ruby_lsp"
 vim.g.lazyvim_ruby_formatter = "rubocop"
 
