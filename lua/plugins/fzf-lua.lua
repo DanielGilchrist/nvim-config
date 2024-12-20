@@ -21,9 +21,9 @@ local shit_colourschemes = {
   "^sorbet$",
   "^torte$",
   "^vim$",
-  "^wildcharms$",
+  "^wildcharm$",
   "^zaibatsu$",
-  "^zellners$",
+  "^zellner$",
 }
 
 return {
