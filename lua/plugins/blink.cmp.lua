@@ -11,6 +11,9 @@ return {
       ["<Right>"] = { "fallback" },
     },
     completion = {
+      list = {
+        selection = "manual",
+      },
       trigger = {
         show_on_insert_on_trigger_character = false,
       }
