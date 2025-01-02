@@ -124,7 +124,7 @@ local function remove_scratchpad()
     end
 
     local file_list = table.concat(files_to_delete, "\n")
-    local input_prompt = "Are you sure you want to remove these scratchpads? (y/n)\n\n" .. file_list
+    local input_prompt = "Are you sure you want to remove these scratchpads? (y/n)\n\n"
 
     vim.ui.input({ prompt = input_prompt }, function(input)
       if input == "y" then
